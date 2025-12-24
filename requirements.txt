@@ -10,6 +10,6 @@ scipy
 statsmodels
 matplotlib
 pymongo[srv]==3.12
-
-
-# -e .
+dill 
+pyyaml      
+pydantic

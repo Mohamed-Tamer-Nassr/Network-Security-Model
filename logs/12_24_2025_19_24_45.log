@@ -1,5 +1,0 @@
-2025-12-24 19:24:46 - networksecurity - INFO - initiated data ingestion
-2025-12-24 19:24:51 - networksecurity - INFO - Performed train test split on the dataframe
-2025-12-24 19:24:51 - networksecurity - INFO - Exited split_data_as_train_test method of Data_Ingestion class
-2025-12-24 19:24:51 - networksecurity - INFO - Exporting train and test file path.
-2025-12-24 19:24:51 - networksecurity - INFO - Exported train and test file path.

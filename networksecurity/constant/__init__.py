@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 
 
-"""Data Ingestion related constant star with DATA_INGESTION VAR NAME
+"""
+   Data Ingestion related constant star with DATA_INGESTION VAR NAME
 """
 DATA_INGESTION_COLLECTION_NAME: str = "NetworkData"
 DATA_INGESTION_DATABASE_NAME: str = "NetworkSecurity"

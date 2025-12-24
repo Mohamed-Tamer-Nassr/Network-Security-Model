@@ -15,6 +15,8 @@ import certifi
 
 # configuration of data ingestion
 
+# what is load_dotenv()?
+# load_dotenv() is a function that is used to load the environment variables from the .env file.
 load_dotenv()
 
 MONGO_DB_URL = os.getenv("MONGO_DB_URL")
