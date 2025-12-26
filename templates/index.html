@@ -1,0 +1,701 @@
+{% extends "base.html" %} {% block title %}NetGuard - AI Phishing Detection{%
+endblock %} {% block content %}
+<!-- Hero Section -->
+<section class="relative bg-white overflow-hidden">
+  <div
+    class="absolute inset-0 bg-gradient-to-br from-brand-50 to-white -z-10"
+  ></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <div
+        class="inline-flex items-center px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-sm font-medium mb-6 border border-brand-100"
+      >
+        <i class="fa-solid fa-bolt mr-2"></i> AI-Powered Protection
+      </div>
+      <h1
+        class="text-4xl md:text-6xl font-bold tracking-tight text-gray-900 mb-6"
+      >
+        Is that website <span class="text-brand-600">safe?</span>
+      </h1>
+      <p class="text-xl text-gray-500">
+        Analyze website features or upload data to detect phishing threats
+        instantly.
+      </p>
+    </div>
+
+    <!-- Main Interface Card -->
+    <div
+      class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
+    >
+      <!-- Tabs -->
+      <div class="flex border-b border-gray-100">
+        <button
+          class="w-1/2 py-4 text-center font-semibold text-gray-500 hover:text-brand-600 hover:bg-gray-50 transition-colors active-tab"
+          id="tab-manual"
+          onclick="switchTab('manual')"
+        >
+          <i class="fa-solid fa-keyboard mr-2"></i> Manual Input
+        </button>
+        <button
+          class="w-1/2 py-4 text-center font-semibold text-gray-500 hover:text-brand-600 hover:bg-gray-50 transition-colors"
+          id="tab-upload"
+          onclick="switchTab('upload')"
+        >
+          <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Upload CSV
+        </button>
+      </div>
+
+      <div class="p-6 md:p-8">
+        <!-- Manual Input Form -->
+        <div id="content-manual" class="block">
+          <form
+            action="/predict-form"
+            method="post"
+            class="space-y-8"
+            id="manualForm"
+          >
+            <!-- Section 1: URL & Address -->
+            <div>
+              <h3
+                class="text-lg font-semibold text-gray-900 mb-4 flex items-center"
+              >
+                <i class="fa-solid fa-link text-brand-500 mr-2"></i> URL &
+                Address Features
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >IP Address in URL</label
+                  >
+                  <select
+                    name="having_IP_Address"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="-1">Yes (Phishing) -1</option>
+                    <option value="1" selected>No (Safe) 1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >URL Length</label
+                  >
+                  <select
+                    name="URL_Length"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Short (Safe) 1</option>
+                    <option value="0">Medium (Suspicious) 0</option>
+                    <option value="-1">Long (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Shortening Service</label
+                  >
+                  <select
+                    name="Shortining_Service"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>No (Safe) 1</option>
+                    <option value="-1">Yes (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >@ Symbol</label
+                  >
+                  <select
+                    name="having_At_Symbol"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>No (Safe) 1</option>
+                    <option value="-1">Yes (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Double Slash Redirect</label
+                  >
+                  <select
+                    name="double_slash_redirecting"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>No (Safe) 1</option>
+                    <option value="-1">Yes (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Prefix/Suffix (- in domain)</label
+                  >
+                  <select
+                    name="Prefix_Suffix"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>No (Safe) 1</option>
+                    <option value="-1">Yes (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Sub-Domain Count</label
+                  >
+                  <select
+                    name="having_Sub_Domain"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Low (Safe) 1</option>
+                    <option value="0">Medium (Suspicious) 0</option>
+                    <option value="-1">High (Phishing) -1</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2: Security & Encryption -->
+            <div>
+              <h3
+                class="text-lg font-semibold text-gray-900 mb-4 flex items-center"
+              >
+                <i class="fa-solid fa-lock text-brand-500 mr-2"></i> Security &
+                Encryption
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >SSL State</label
+                  >
+                  <select
+                    name="SSLfinal_State"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Valid (Safe) 1</option>
+                    <option value="0">Suspicious 0</option>
+                    <option value="-1">Expired/None (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >HTTPS Token in Domain</label
+                  >
+                  <select
+                    name="HTTPS_token"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>No (Safe) 1</option>
+                    <option value="-1">Yes (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Server Form Handler (SFH)</label
+                  >
+                  <select
+                    name="SFH"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Safe 1</option>
+                    <option value="0">About:Blank 0</option>
+                    <option value="-1">Different Domain -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Abnormal URL</label
+                  >
+                  <select
+                    name="Abnormal_URL"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>No (Safe) 1</option>
+                    <option value="-1">Yes (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Redirect Count</label
+                  >
+                  <select
+                    name="Redirect"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="0" selected>None/Few (Safe) 0</option>
+                    <option value="1">Many (Phishing) 1</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 3: Content & HTML -->
+            <div>
+              <h3
+                class="text-lg font-semibold text-gray-900 mb-4 flex items-center"
+              >
+                <i class="fa-solid fa-code text-brand-500 mr-2"></i> Content &
+                HTML
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Favicon Location</label
+                  >
+                  <select
+                    name="Favicon"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Same Domain (Safe) 1</option>
+                    <option value="-1">External (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Non-Standard Port</label
+                  >
+                  <select
+                    name="port"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Preferred (Safe) 1</option>
+                    <option value="-1">Non-Preferred (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Request URL (Image/Video src)</label
+                  >
+                  <select
+                    name="Request_URL"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>High % Internal (Safe) 1</option>
+                    <option value="-1">High % External (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >URL of Anchor (Links)</label
+                  >
+                  <select
+                    name="URL_of_Anchor"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>High % Internal (Safe) 1</option>
+                    <option value="0">Mixed 0</option>
+                    <option value="-1">High % External (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Links in Meta/Script Tags</label
+                  >
+                  <select
+                    name="Links_in_tags"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>High % Internal (Safe) 1</option>
+                    <option value="0">Mixed 0</option>
+                    <option value="-1">High % External (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Submitting to Email</label
+                  >
+                  <select
+                    name="Submitting_to_email"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>No (Safe) 1</option>
+                    <option value="-1">Yes (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Status Bar Customization</label
+                  >
+                  <select
+                    name="on_mouseover"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Default (Safe) 1</option>
+                    <option value="-1">Customized (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Disable Right Click</label
+                  >
+                  <select
+                    name="RightClick"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>No (Safe) 1</option>
+                    <option value="-1">Yes (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Pop-up Window</label
+                  >
+                  <select
+                    name="popUpWidnow"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>No (Safe) 1</option>
+                    <option value="-1">Yes (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Iframe Used</label
+                  >
+                  <select
+                    name="Iframe"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>No (Safe) 1</option>
+                    <option value="-1">Yes (Phishing) -1</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 4: Domain & Reputation -->
+            <div>
+              <h3
+                class="text-lg font-semibold text-gray-900 mb-4 flex items-center"
+              >
+                <i class="fa-solid fa-globe text-brand-500 mr-2"></i> Domain &
+                Reputation
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Domain Registration Length</label
+                  >
+                  <select
+                    name="Domain_registeration_length"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Long (>1 yr) (Safe) 1</option>
+                    <option value="-1">Short (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Age of Domain</label
+                  >
+                  <select
+                    name="age_of_domain"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Long (>6 mo) (Safe) 1</option>
+                    <option value="-1">Short (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >DNS Record</label
+                  >
+                  <select
+                    name="DNSRecord"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Found (Safe) 1</option>
+                    <option value="-1">Missing (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Web Traffic</label
+                  >
+                  <select
+                    name="web_traffic"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>High (Safe) 1</option>
+                    <option value="0">Medium 0</option>
+                    <option value="-1">Low (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Page Rank</label
+                  >
+                  <select
+                    name="Page_Rank"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>High (Safe) 1</option>
+                    <option value="-1">Low (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Google Index</label
+                  >
+                  <select
+                    name="Google_Index"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Indexed (Safe) 1</option>
+                    <option value="-1">Not Indexed (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Links Pointing to Page</label
+                  >
+                  <select
+                    name="Links_pointing_to_page"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Many (Safe) 1</option>
+                    <option value="0">Some 0</option>
+                    <option value="-1">Few/None (Phishing) -1</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Statistical Report</label
+                  >
+                  <select
+                    name="Statistical_report"
+                    class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500 shadow-sm transition-colors py-2.5"
+                  >
+                    <option value="1" selected>Safe 1</option>
+                    <option value="-1">Phishing Source -1</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-6">
+              <button
+                type="submit"
+                id="submitBtnManual"
+                class="w-full bg-brand-600 text-white rounded-lg py-4 px-4 font-bold text-lg hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 transition-all shadow-lg shadow-brand-200"
+              >
+                <span id="btnTextManual">Analyze Website</span>
+                <i class="fa-solid fa-angle-right ml-2"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- CSV Upload Form -->
+        <div id="content-upload" class="hidden">
+          <form
+            action="/predict"
+            method="post"
+            enctype="multipart/form-data"
+            id="uploadForm"
+            class="space-y-6"
+          >
+            <div
+              id="drop-zone"
+              class="border-2 border-dashed border-gray-300 rounded-xl p-10 text-center hover:border-brand-500 hover:bg-brand-50 transition-all cursor-pointer group"
+            >
+              <input
+                type="file"
+                name="file"
+                id="fileInput"
+                class="hidden"
+                accept=".csv"
+                required
+              />
+              <div class="mb-4">
+                <div
+                  class="w-16 h-16 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform"
+                >
+                  <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
+                </div>
+              </div>
+              <h3 class="text-lg font-semibold text-gray-900">
+                Upload CSV File
+              </h3>
+              <p class="text-gray-500 text-sm mt-2">
+                Drag and drop or click to browse
+              </p>
+              <p
+                id="fileName"
+                class="text-brand-600 font-medium mt-4 text-sm hidden"
+              ></p>
+            </div>
+
+            <button
+              type="submit"
+              id="submitBtn"
+              class="w-full bg-brand-600 text-white rounded-lg py-3.5 px-4 font-semibold hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 transition-all shadow-lg shadow-brand-200"
+            >
+              <span id="btnText">Scan File</span>
+              <i class="fa-solid fa-angle-right ml-2"></i>
+            </button>
+          </form>
+          <p class="text-center text-xs text-gray-400 mt-6">
+            <i class="fa-solid fa-lock mr-1"></i> Data is processed securely and
+            not stored permanently.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Grid -->
+<section class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+        <div
+          class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4"
+        >
+          <i class="fa-solid fa-brain text-xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Smart Analysis</h3>
+        <p class="text-gray-600">
+          Uses Random Forest algorithms to analyze over 30 distinct URL
+          features.
+        </p>
+      </div>
+      <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+        <div
+          class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mb-4"
+        >
+          <i class="fa-solid fa-bolt text-xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Real-time Results</h3>
+        <p class="text-gray-600">
+          Get instant feedback on potential threats with millisecond latency.
+        </p>
+      </div>
+      <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+        <div
+          class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4"
+        >
+          <i class="fa-solid fa-shield-halved text-xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">High Accuracy</h3>
+        <p class="text-gray-600">
+          Trained on thousands of verified phishing and legitimate datasets.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} {% block scripts %}
+<script>
+  // Tab Switching Logic
+  function switchTab(tab) {
+    // Reset styles
+    document
+      .getElementById("tab-manual")
+      .classList.remove(
+        "text-brand-600",
+        "bg-gray-50",
+        "border-brand-500",
+        "border-b-2"
+      );
+    document
+      .getElementById("tab-upload")
+      .classList.remove(
+        "text-brand-600",
+        "bg-gray-50",
+        "border-brand-500",
+        "border-b-2"
+      );
+
+    // Hide content
+    document.getElementById("content-manual").classList.add("hidden");
+    document.getElementById("content-upload").classList.add("hidden");
+
+    // Activate selected
+    const selectedTab = document.getElementById(`tab-${tab}`);
+    // selectedTab.classList.add('text-brand-600', 'bg-gray-50', 'border-brand-500', 'border-b-2'); // Tailwind border-b-2 might conflict with parent flex border-b
+    // Let's use simple styling for active state
+    selectedTab.classList.add("text-brand-600", "bg-gray-50", "shadow-inner");
+
+    document.getElementById(`content-${tab}`).classList.remove("hidden");
+  }
+
+  // Initialize Tab
+  switchTab("manual");
+
+  // Drag & Drop & Upload Logic (Existing)
+  const dropZone = document.getElementById("drop-zone");
+  const fileInput = document.getElementById("fileInput");
+  const fileName = document.getElementById("fileName");
+  const uploadForm = document.getElementById("uploadForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const btnText = document.getElementById("btnText");
+
+  ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
+  });
+
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  ["dragenter", "dragover"].forEach((eventName) => {
+    dropZone.addEventListener(eventName, highlight, false);
+  });
+
+  ["dragleave", "drop"].forEach((eventName) => {
+    dropZone.addEventListener(eventName, unhighlight, false);
+  });
+
+  function highlight(e) {
+    dropZone.classList.add("border-brand-500", "bg-brand-50");
+  }
+  function unhighlight(e) {
+    dropZone.classList.remove("border-brand-500", "bg-brand-50");
+  }
+
+  dropZone.addEventListener("drop", handleDrop, false);
+
+  function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    handleFiles(files);
+  }
+
+  dropZone.addEventListener("click", () => fileInput.click());
+
+  fileInput.addEventListener("change", function () {
+    handleFiles(this.files);
+  });
+
+  function handleFiles(files) {
+    if (files.length > 0) {
+      const file = files[0];
+      fileInput.files = files;
+      fileName.textContent = `Selected: ${file.name}`;
+      fileName.classList.remove("hidden");
+    }
+  }
+
+  uploadForm.addEventListener("submit", function () {
+    if (fileInput.files.length === 0) return;
+    submitBtn.disabled = true;
+    btnText.textContent = "Processing...";
+    submitBtn.innerHTML =
+      '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+    submitBtn.classList.add("opacity-75", "cursor-not-allowed");
+  });
+
+  // Manual Form Loading State
+  const manualForm = document.getElementById("manualForm");
+  const submitBtnManual = document.getElementById("submitBtnManual");
+  const btnTextManual = document.getElementById("btnTextManual");
+
+  manualForm.addEventListener("submit", function () {
+    submitBtnManual.disabled = true;
+    btnTextManual.textContent = "Analyzing...";
+    submitBtnManual.innerHTML =
+      '<i class="fa-solid fa-circle-notch fa-spin"></i> Analyzing...';
+    submitBtnManual.classList.add("opacity-75", "cursor-not-allowed");
+  });
+</script>
+{% endblock %}

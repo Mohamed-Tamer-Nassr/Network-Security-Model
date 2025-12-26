@@ -1,0 +1,83 @@
+{% extends "base.html" %} {% block title %}How it Works - NetGuard{% endblock %}
+{% block content %}
+<section class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">How it Works</h1>
+      <p class="text-lg text-gray-500">
+        Understanding the analysis pipeline from upload to prediction.
+      </p>
+    </div>
+
+    <div class="relative">
+      <!-- Connecting Line -->
+      <div
+        class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-200 -z-10 transform -translate-y-1/2"
+      ></div>
+
+      <div class="grid md:grid-cols-4 gap-8">
+        <!-- Step 1 -->
+        <div
+          class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm text-center relative"
+        >
+          <div
+            class="w-16 h-16 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold border-4 border-white"
+          >
+            1
+          </div>
+          <h3 class="text-lg font-bold mb-2">Input Data</h3>
+          <p class="text-sm text-gray-500">
+            Choose between <strong>Manual Input</strong> to enter URL features
+            directly, or <strong>Upload CSV</strong> for batch processing.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div
+          class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm text-center relative"
+        >
+          <div
+            class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold border-4 border-white"
+          >
+            2
+          </div>
+          <h3 class="text-lg font-bold mb-2">Preprocessing</h3>
+          <p class="text-sm text-gray-500">
+            Data is cleaned, normalized, and transformed for the model.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div
+          class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm text-center relative"
+        >
+          <div
+            class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold border-4 border-white"
+          >
+            3
+          </div>
+          <h3 class="text-lg font-bold mb-2">Analysis</h3>
+          <p class="text-sm text-gray-500">
+            The ML model evaluates 30+ features to calculate risk score.
+          </p>
+        </div>
+
+        <!-- Step 4 -->
+        <div
+          class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm text-center relative"
+        >
+          <div
+            class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold border-4 border-white"
+          >
+            4
+          </div>
+          <h3 class="text-lg font-bold mb-2">Results</h3>
+          <p class="text-sm text-gray-500">
+            Instant "Safe" or "Phishing" classification is displayed.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,176 @@
+{% extends "base.html" %} {% block title %}Scan Results - NetGuard{% endblock %}
+{% block content %}
+<section class="bg-slate-50 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Scan Results</h1>
+      <a
+        href="/"
+        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors"
+      >
+        <i class="fa-solid fa-arrow-left mr-2"></i> Scan Another File
+      </a>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div
+        class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center"
+      >
+        <div class="bg-blue-100 p-3 rounded-lg mr-4">
+          <i class="fa-solid fa-list-check text-blue-600 text-xl"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500">Total Scanned</p>
+          <p class="text-2xl font-bold text-gray-900" id="totalCount">-</p>
+        </div>
+      </div>
+      <div
+        class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center"
+      >
+        <div class="bg-green-100 p-3 rounded-lg mr-4">
+          <i class="fa-solid fa-shield-check text-green-600 text-xl"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500">Safe Websites</p>
+          <p class="text-2xl font-bold text-green-600" id="safeCount">-</p>
+        </div>
+      </div>
+      <div
+        class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center"
+      >
+        <div class="bg-red-100 p-3 rounded-lg mr-4">
+          <i class="fa-solid fa-triangle-exclamation text-red-600 text-xl"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500">Potential Phishing</p>
+          <p class="text-2xl font-bold text-red-600" id="scamCount">-</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Table -->
+    <div
+      class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden"
+    >
+      <div
+        class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50"
+      >
+        <h3 class="text-lg font-semibold text-gray-900">Detailed Analysis</h3>
+        <button
+          onclick="downloadCSV()"
+          class="text-brand-600 hover:text-brand-700 font-medium text-sm flex items-center"
+        >
+          <i class="fa-solid fa-download mr-2"></i> Download CSV
+        </button>
+      </div>
+      <div class="overflow-x-auto">
+        <div class="min-w-full inline-block align-middle">
+          <div class="border rounded-lg overflow-hidden">
+            {{ table | safe }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %} {% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const table = document.querySelector("table");
+    if (table) {
+      table.classList.add("min-w-full", "divide-y", "divide-gray-200");
+      const thead = table.querySelector("thead");
+      if (thead) thead.classList.add("bg-gray-50");
+
+      const ths = table.querySelectorAll("th");
+      ths.forEach((th) =>
+        th.classList.add(
+          "px-6",
+          "py-3",
+          "text-left",
+          "text-xs",
+          "font-medium",
+          "text-gray-500",
+          "uppercase",
+          "tracking-wider"
+        )
+      );
+
+      const tds = table.querySelectorAll("td");
+      tds.forEach((td) =>
+        td.classList.add(
+          "px-6",
+          "py-4",
+          "whitespace-nowrap",
+          "text-sm",
+          "text-gray-500"
+        )
+      );
+
+      // Process results for summary
+      // Important: Depending on how pandas renders HTML, we need to find the specific 'Result' column.
+      // Assuming the last column is 'Result' or we look for it.
+      // For now, let's just style the rows based on content if possible, or leave it cleaner.
+
+      // NOTE: Since the pandas to_html is simple, we might need to iterate rows to add badges.
+      // Let's rely on backend passing a clean table or simple JS enhancement.
+
+      const rows = table.querySelectorAll("tbody tr");
+      let total = rows.length;
+      let safe = 0;
+      let scam = 0;
+
+      // Find the index of the "Result" column
+      const headers = Array.from(table.querySelectorAll("thead th"));
+      const resultIndex = headers.findIndex(
+        (th) =>
+          th.textContent.trim() === "Result" ||
+          th.textContent.trim() === "predicted_column"
+      );
+
+      rows.forEach((row) => {
+        if (resultIndex !== -1) {
+          const cell = row.cells[resultIndex];
+          const value = cell.textContent.trim();
+
+          // Assuming logic: 1 = Phishing/Scam, 0/-1 = Safe (Wait, typical datasets: 1=Phishing, -1=Legit or vice versa)
+          // Looking at schema.yaml, it's just 'Result'.
+          // In many datasets: -1 is phishing, 1 is harmless. OR 1 is phishing.
+          // Let's assume prediction output:
+          // Based on app.py: `df['predicted_column']` is added.
+
+          // Let's check value.
+          // If we don't know for sure, we can heuristics.
+          // Standard Phishing Dataset: -1: Phishing, 1: Legitimate.
+          // But often converted.
+          // Let's color code based on unique values found or assume standard.
+
+          // Let's just look for "1" and "0" or "-1".
+          // I will wrap the cell in a badge.
+
+          // Check for 1, 1.0, or similar
+          if (parseFloat(value) == 1) {
+            cell.innerHTML =
+              '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"><i class="fa-solid fa-check mr-1"></i> Safe</span>';
+            safe++;
+          } else {
+            cell.innerHTML =
+              '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Phishing</span>';
+            scam++;
+          }
+        }
+      });
+
+      document.getElementById("totalCount").textContent = total;
+      document.getElementById("safeCount").textContent = safe;
+      document.getElementById("scamCount").textContent = scam;
+    }
+  });
+
+  function downloadCSV() {
+    window.location.href = "/download"; // We need to implement this route or similar
+  }
+</script>
+{% endblock %}
